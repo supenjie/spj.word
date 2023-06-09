@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            width: 500px;
+            height: 600px;
+            background-color: rgb(255, 255, 255);
+            margin: 20px auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .content {
+            width: 500px;
+            height: 550px;
+            background-color: rgb(43, 210, 118);
+            position: relative;
+        }
+
+        #all {
+            width: 100px;
+        }
+
+        #text {
+            height: 30px;
+            width: 300px;
+            text-indent: 1em;
+            margin: 20px;
+        }
+
+        li {
+            list-style: none;
+            position: relative;
+            height: 50px;
+            border-bottom: 1px solid #fff;
+        }
+
+        .bottom {
+            position: absolute;
+            width: 500px;
+            height: 50px;
+            bottom: 0;
+            background-color: rgb(29, 169, 99);
+        }
+
+        .bottom button {
+            margin: 10px;
+            height: 30px;
+        }
+
+
+
+        .tex {
+            width: 500px;
+            height: 80px;
+            border-bottom: 1px solid #FFF;
+        }
+
+        .delete-button {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            width: 30px;
+            height: 30px;
+            background-color: rgb(226, 7, 7);
+            color: rgb(255, 255, 255);
+            font-size: 20px;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <div id="box">
+        <h1>备忘录</h1>
+        <div class="content">
+            <div class="tex">
+             <label for="all"> <input type="checkbox" name="" id="all">全选</label>
+                
+                <input type="text" name="" id="text" placeholder="需要做什么?">
+            </div>
+            <ul id="itemsList"></ul>
+            <div class="bottom">
+                <span>&nbsp;当前未完成&emsp;<span id="counter"></span></span>
+                <button style="width:50px">所有</button>
+                <button style="width:60px">未完成</button>
+                <button style="width:60px">已完成</button>
+                <button style="width:100px" id="alls"><label for="alls">清除完成项</label></button>
+            </div>
+        </div>
+    </div>
+    <script>
+        var input = document.getElementById("text");
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                if (input.value.trim() !== "") {
+                    addItem();
+                } else {
+                    event.preventDefault();
+                }
+            }
+        });
+
+
+        var list = document.getElementById("itemsList");
+        function addItem() {
+            var input = document.getElementById("text");
+            var value = input.value;
+            input.value = "";
+            var items = [];
+
+            var item = document.createElement("li");
+            item.style = 'height:50px;line-height:50px';
+
+            var checkbox = document.createElement("input");
+            checkbox.setAttribute("data-index", list.children.length);
+
+            list.append(item);
+            var counter = document.getElementById("counter");
+            counter.textContent = list.getElementsByTagName("li").length;
+
+            var checkbox = document.createElement("input")
+            checkbox.style = 'margin:20px 44px'
+            checkbox.type = "checkbox";
+            checkbox.setAttribute('name', 'person');
+            checkbox.className = "item-checkbox";
+
+            var label = document.createElement("label");
+            label.innerHTML = value;
+            var deleteButton = document.createElement("button");
+            deleteButton.className = "delete-button";
+            deleteButton.innerHTML = "x";
+
+            item.append(checkbox);
+            item.append(label);
+            item.append(deleteButton);
+            list.append(item);
+            items.push(item);
+            localStorage.setItem("items", JSON.stringify(items));
+            deleteButton.addEventListener("click", function () {
+                list.removeChild(item);
+            });
+            var clearAllButton = document.getElementById("alls");
+            clearAllButton.addEventListener("click", function () {
+                while (itemsList.firstChild) {
+                    itemsList.removeChild(itemsList.firstChild);
+                }
+            });
+
+            //    1
+            var checkAll = document.getElementById("all");
+            var checkboxes = document.querySelectorAll("#itemsList input[type='checkbox']");
+
+            checkAll.addEventListener("change", function () {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = this.checked;
+                    upStyle(checkboxes[i]);
+                }
+            });
+            function upStyle(item) {
+                var label = item.parentElement.querySelector("label");
+                if (item.checked) {
+                    label.classList.add("completed");
+                } else {
+                    label.classList.remove("completed");
+                }
+            }
+            function Counter() {
+                var total = checkboxes.length;
+                var checked = document.querySelectorAll("#itemsList input[type='checkbox']:checked").length;
+            }
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].addEventListener("change", function () {
+                    checkAll.checked = document.querySelectorAll("#itemsList input[type='checkbox']:not(:checked)").length === 0;
+                    upStyle(this);
+                    Counter();
+                });
+            }
+
+           
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
